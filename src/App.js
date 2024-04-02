@@ -1,24 +1,28 @@
-import logo from './logo.svg';
+import React, { useState, useEffect } from 'react';
 import './App.css';
+import axios from 'axios';
 
 function App() {
+  const [images, setImages] = useState([]);
+
+  useEffect(() => {
+    axios.get('http://localhost:3000/test/api/images?userID=zmmSNFNbvt')
+      .then(response => {
+        setImages(response.data);
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  }, []);
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    {images.map((image, index) => (
+      <div key={index}>
+        <img src={`data:${image.contentType};base64,${image.data}`} alt={`leaf ${index}`} />
+      </div>
+    ))}
+  </div>
   );
 }
 
